@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 
 const PokemonCard = ({ name, url }) => {
     const [details, setDetails] = useState(null);
+    const [showDetails, setShowDetails] = useState(false); // Stato per mostrare/nascondere i dettagli
 
     useEffect(() => {
         const fetchDetails = async () => {
@@ -21,7 +24,6 @@ const PokemonCard = ({ name, url }) => {
         fetchDetails();
     }, [url, name]);
 
-
     if (!details) return <p style={{ textAlign: "center", fontSize: "1.2rem", color: "#ff6f61" }}>Caricamento dettagli...</p>;
 
     // Genera un colore di sfondo casuale per ogni card
@@ -31,77 +33,93 @@ const PokemonCard = ({ name, url }) => {
     };
 
     return (
-        <div style={{
-            backgroundColor: randomBackground(),
-            borderRadius: "15px",
-            padding: "15px",
-            width: "240px",
-            textAlign: "center",
-            color: "#333",
-            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
-            transition: "all 0.3s ease-in-out",
-            cursor: "pointer",
-        }}
-            onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateY(-10px)";
-                e.currentTarget.style.boxShadow = "0 12px 24px rgba(0, 0, 0, 0.3)";
-            }}
-            onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "translateY(0)";
-                e.currentTarget.style.boxShadow = "0 8px 16px rgba(0, 0, 0, 0.2)";
-            }}
-        >
-            <img
-                src={details.sprites.front_default}
-                alt={name}
-                style={{ width: "140px", height: "140px", marginBottom: "10px" }}
-            />
-            <h3 style={{
-                fontSize: "1.5rem",
-                color: "#333",
-                margin: "10px 0",
-                textShadow: "1px 1px #fff",
-            }}>
-                {name.toUpperCase()}
-            </h3>
-            <p style={{
-                margin: "5px 0",
-                fontSize: "1rem",
-                color: "#444",
-                fontWeight: "bold",
-                backgroundColor: "#ffffffaa",
-                padding: "5px",
-                borderRadius: "8px",
-                display: "inline-block"
-            }}>
-                <strong>Tipo:</strong> {details.types.map(type => type.type.name).join(", ")}
-            </p>
-            <div style={{
-                display: "flex",
-                justifyContent: "space-around",
-                marginTop: "10px"
-            }}>
+        <div style={{ position: "relative", textAlign: "center" }}>
+            {/* Card principale */}
+            <div
+                style={{
+                    backgroundColor: randomBackground(),
+                    borderRadius: "15px",
+                    padding: "15px",
+                    width: "240px",
+                    textAlign: "center",
+                    color: "#333",
+                    boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
+                    cursor: "pointer",
+                    transition: "all 0.3s ease-in-out",
+                }}
+                onClick={() => setShowDetails(true)} // Mostra i dettagli al clic
+            >
+                <img
+                    src={details.sprites.front_default}
+                    alt={name}
+                    style={{ width: "140px", height: "140px", marginBottom: "10px" }}
+                />
+                <h3>{name.toUpperCase()}</h3>
                 <p style={{
-                    fontSize: "0.9rem",
-                    color: "#555",
+                    margin: "5px 0",
+                    fontSize: "1rem",
+                    color: "#444",
                     fontWeight: "bold",
-                    backgroundColor: "#fff",
-                    padding: "5px 10px",
+                    backgroundColor: "#ffffffaa",
+                    padding: "5px",
                     borderRadius: "8px",
+                    display: "inline-block"
                 }}>
-                    <strong>Altezza:</strong> {details.height}
-                </p>
-                <p style={{
-                    fontSize: "0.9rem",
-                    color: "#555",
-                    fontWeight: "bold",
-                    backgroundColor: "#fff",
-                    padding: "5px 10px",
-                    borderRadius: "8px",
-                }}>
-                    <strong>Peso:</strong> {details.weight}
+                    <strong>Tipo:</strong> {details.types.map(type => type.type.name).join(", ")}
                 </p>
             </div>
+
+            {/* Overlay dei dettagli */}
+            {showDetails && (
+                <div style={{
+                    position: "fixed", // Copre l'intero schermo
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    backgroundColor: "rgba(0, 0, 0, 0.8)",
+                    color: "#fff",
+                    padding: "20px",
+                    zIndex: 1000, // Garantisce la priorità sopra altri elementi
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                }}>
+                    <div style={{ textAlign: "center", paddingTop: "20px" }}>
+                        <h2>{details.name.toUpperCase()}</h2>
+                        <img
+                            src={details.sprites.other["official-artwork"].front_default}
+                            alt={details.name}
+                            style={{ width: "250px", height: "250px", margin: "20px 0" }}
+                        />
+                        <p><strong>Base Experience:</strong> {details.base_experience}</p>
+                        <p><strong>Altezza:</strong> {details.height}</p>
+                        <p><strong>Peso:</strong> {details.weight}</p>
+                        <p><strong>Abilità:</strong> {details.abilities.map(ability => ability.ability.name).join(", ")}</p>
+                        <p><strong>Tipi:</strong> {details.types.map(type => type.type.name).join(", ")}</p>
+                    </div>
+
+                    {/* Icona di chiusura al centro in fondo */}
+                    <button
+                        onClick={() => setShowDetails(false)} // Nascondi i dettagli al clic
+                        style={{
+                            backgroundColor: "transparent",
+                            border: "none",
+                            cursor: "pointer",
+                            marginBottom: "20px",
+                        }}
+                    >
+                        <FontAwesomeIcon
+                            icon={faTimesCircle}
+                            style={{
+                                fontSize: "3rem", // Icona grande
+                                color: "#ff4d4d", // Colore rosso acceso
+                            }}
+                        />
+                    </button>
+                </div>
+            )}
         </div>
     );
 };
