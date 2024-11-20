@@ -5,6 +5,7 @@ import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 
 const PokemonCard = ({ name, url }) => {
     const [details, setDetails] = useState(null);
+    const [species, setSpecies] = useState(null); // Per informazioni aggiuntive sulla specie
     const [showDetails, setShowDetails] = useState(false); // Stato per mostrare/nascondere i dettagli
 
     useEffect(() => {
@@ -16,6 +17,10 @@ const PokemonCard = ({ name, url }) => {
             try {
                 const response = await axios.get(url);
                 setDetails(response.data);
+
+                // Fetch delle informazioni sulla specie
+                const speciesResponse = await axios.get(response.data.species.url);
+                setSpecies(speciesResponse.data);
             } catch (error) {
                 console.error(`Errore durante il fetch dei dettagli di ${name}:`, error.message);
             }
@@ -24,7 +29,21 @@ const PokemonCard = ({ name, url }) => {
         fetchDetails();
     }, [url, name]);
 
-    if (!details) return <p style={{ textAlign: "center", fontSize: "1.2rem", color: "#ff6f61" }}>Caricamento dettagli...</p>;
+    useEffect(() => {
+        // Disabilita lo scorrimento della pagina quando l'overlay è visibile
+        if (showDetails) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "auto";
+        }
+
+        // Pulizia dello stile quando il componente viene smontato
+        return () => {
+            document.body.style.overflow = "auto";
+        };
+    }, [showDetails]);
+
+    if (!details || !species) return <p style={{ textAlign: "center", fontSize: "1.2rem", color: "#ff6f61" }}>Caricamento dettagli...</p>;
 
     // Genera un colore di sfondo casuale per ogni card
     const randomBackground = () => {
@@ -81,6 +100,7 @@ const PokemonCard = ({ name, url }) => {
                     color: "#fff",
                     padding: "20px",
                     zIndex: 1000, // Garantisce la priorità sopra altri elementi
+                    overflowY: "auto", // Scorrimento per l'overlay
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
@@ -94,10 +114,16 @@ const PokemonCard = ({ name, url }) => {
                             style={{ width: "250px", height: "250px", margin: "20px 0" }}
                         />
                         <p><strong>Base Experience:</strong> {details.base_experience}</p>
-                        <p><strong>Altezza:</strong> {details.height}</p>
-                        <p><strong>Peso:</strong> {details.weight}</p>
+                        <div>
+                            <p><strong>Esperienza per il prossimo livello:</strong></p>
+                            <progress value={details.base_experience} max="100" style={{ width: "80%" }} />
+                        </div>
+                        <p><strong>Altezza:</strong> {(details.height * 0.1).toFixed(2)} m</p>
+                        <p><strong>Peso:</strong> {(details.weight * 0.1).toFixed(2)} kg</p>
                         <p><strong>Abilità:</strong> {details.abilities.map(ability => ability.ability.name).join(", ")}</p>
                         <p><strong>Tipi:</strong> {details.types.map(type => type.type.name).join(", ")}</p>
+                        <p><strong>Habitat:</strong> {species.habitat?.name || "Sconosciuto"}</p>
+                        <p><strong>Descrizione:</strong> {species.flavor_text_entries.find(entry => entry.language.name === "en")?.flavor_text || "N/A"}</p>
                     </div>
 
                     {/* Icona di chiusura al centro in fondo */}

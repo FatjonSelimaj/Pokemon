@@ -9,7 +9,7 @@ const PokemonList = () => {
     useEffect(() => {
         const fetchPokemon = async () => {
             try {
-                const response = await axios.get("https://pokeapi.co/api/v2/pokemon?limit=27");
+                const response = await axios.get("https://pokeapi.co/api/v2/pokemon?limit=30");
                 console.log("Risultati API:", response.data.results); // Logga i dati per verificare
                 setPokemon(response.data.results);
             } catch (error) {
