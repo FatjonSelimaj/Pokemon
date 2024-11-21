@@ -52,8 +52,11 @@ const PokemonList = () => {
                         padding: "10px",
                         border: "1px solid #ccc",
                         borderRadius: "8px",
-                        width: "300px",
+                        width: "100%", // Larghezza dinamica
+                        maxWidth: "300px", // Massima larghezza su schermi grandi
                         fontSize: "1rem",
+                        textAlign: "center",
+                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
                     }}
                 />
             </div>
