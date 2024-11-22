@@ -60,10 +60,13 @@ const PokemonCategory = () => {
                 userSelect: "none", // Evita la selezione accidentale
             }}
         >
-            {/* Link per tornare alla pagina principale */}
+            {/* Collegamenti migliorati per tornare alla Home o alle Categorie */}
             <div
                 style={{
-                    textAlign: "center",
+                    display: "flex",
+                    flexDirection: "column", // Disposizione verticale per schermi piccoli
+                    gap: "10px",
+                    alignItems: "center", // Centra i pulsanti
                     marginBottom: "20px",
                 }}
             >
@@ -76,15 +79,15 @@ const PokemonCategory = () => {
                         padding: "10px 15px",
                         borderRadius: "8px",
                         fontWeight: "bold",
-                        marginRight: "10px",
+                        textAlign: "center",
+                        width: "100%", // Adatta ai dispositivi mobili
+                        maxWidth: "200px", // Limita la larghezza su schermi grandi
                         outline: "none", // Rimuove eventuali bordi di focus
                     }}
-                    tabIndex={-1} // Disabilita il focus
                 >
                     Torna alla Home
                 </Link>
 
-                {/* Link per tornare alla lista di tutte le categorie */}
                 <Link
                     to="/categorie"
                     style={{
@@ -94,9 +97,11 @@ const PokemonCategory = () => {
                         padding: "10px 15px",
                         borderRadius: "8px",
                         fontWeight: "bold",
+                        textAlign: "center",
+                        width: "100%", // Adatta ai dispositivi mobili
+                        maxWidth: "200px", // Limita la larghezza su schermi grandi
                         outline: "none", // Rimuove eventuali bordi di focus
                     }}
-                    tabIndex={-1} // Disabilita il focus
                 >
                     Torna alle Categorie
                 </Link>
