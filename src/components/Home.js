@@ -9,8 +9,19 @@ const categories = [
 
 const Home = () => {
     return (
-        <div style={{ padding: "20px" }}>
-            <h1 style={{ textAlign: "center", marginBottom: "20px" }}>
+        <div
+            style={{
+                padding: "20px",
+                userSelect: "none", // Impedisce la selezione accidentale
+            }}
+        >
+            <h1
+                style={{
+                    textAlign: "center",
+                    marginBottom: "20px",
+                    userSelect: "none", // Impedisce la selezione del titolo
+                }}
+            >
                 Seleziona una Categoria Pokémon
             </h1>
             <nav
@@ -36,7 +47,9 @@ const Home = () => {
                             fontSize: "1rem",
                             textAlign: "center",
                             transition: "all 0.3s ease",
+                            outline: "none", // Rimuove il bordo di focus
                         }}
+                        tabIndex={-1} // Disabilita il focus
                     >
                         {category.toUpperCase()}
                     </Link>

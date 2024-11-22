@@ -54,9 +54,19 @@ const PokemonCategory = () => {
     }, [type]);
 
     return (
-        <div style={{ padding: "20px" }}>
+        <div
+            style={{
+                padding: "20px",
+                userSelect: "none", // Evita la selezione accidentale
+            }}
+        >
             {/* Link per tornare alla pagina principale */}
-            <div style={{ textAlign: "center", marginBottom: "20px" }}>
+            <div
+                style={{
+                    textAlign: "center",
+                    marginBottom: "20px",
+                }}
+            >
                 <Link
                     to="/"
                     style={{
@@ -67,7 +77,9 @@ const PokemonCategory = () => {
                         borderRadius: "8px",
                         fontWeight: "bold",
                         marginRight: "10px",
+                        outline: "none", // Rimuove eventuali bordi di focus
                     }}
+                    tabIndex={-1} // Disabilita il focus
                 >
                     Torna alla Home
                 </Link>
@@ -82,28 +94,59 @@ const PokemonCategory = () => {
                         padding: "10px 15px",
                         borderRadius: "8px",
                         fontWeight: "bold",
+                        outline: "none", // Rimuove eventuali bordi di focus
                     }}
+                    tabIndex={-1} // Disabilita il focus
                 >
                     Torna alle Categorie
                 </Link>
             </div>
 
             {/* Titolo della categoria */}
-            <h2 style={{ textAlign: "center", marginBottom: "20px", textTransform: "capitalize" }}>
+            <h2
+                style={{
+                    textAlign: "center",
+                    marginBottom: "20px",
+                    textTransform: "capitalize",
+                    userSelect: "none", // Impedisce la selezione
+                }}
+            >
                 Pokémon di Tipo {type.toUpperCase()}
             </h2>
 
             {/* Elenco dei Pokémon */}
             {loading ? (
-                <p style={{ textAlign: "center", fontSize: "1.5rem", color: "#007bff" }}>
+                <p
+                    style={{
+                        textAlign: "center",
+                        fontSize: "1.5rem",
+                        color: "#007bff",
+                        userSelect: "none", // Impedisce la selezione
+                    }}
+                >
                     Caricamento in corso...
                 </p>
             ) : (
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "20px", justifyContent: "center" }}>
+                <div
+                    style={{
+                        display: "flex",
+                        flexWrap: "wrap",
+                        gap: "20px",
+                        justifyContent: "center",
+                    }}
+                >
                     {pokemon.length > 0 ? (
-                        pokemon.map((poke) => <PokemonCard key={poke.name} name={poke.name} url={poke.url} />)
+                        pokemon.map((poke) => (
+                            <PokemonCard key={poke.name} name={poke.name} url={poke.url} />
+                        ))
                     ) : (
-                        <p style={{ textAlign: "center", color: "#ff6f61" }}>
+                        <p
+                            style={{
+                                textAlign: "center",
+                                color: "#ff6f61",
+                                userSelect: "none", // Impedisce la selezione
+                            }}
+                        >
                             Nessun Pokémon trovato per questa categoria.
                         </p>
                     )}

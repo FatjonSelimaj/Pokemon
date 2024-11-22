@@ -16,11 +16,9 @@ const PokemonCard = ({ name, url }) => {
                 const response = await axios.get(url);
                 setDetails(response.data);
 
-                // Fetch informazioni sulla specie
                 const speciesResponse = await axios.get(response.data.species.url);
                 setSpecies(speciesResponse.data);
 
-                // Fetch della catena evolutiva
                 const evolutionResponse = await axios.get(speciesResponse.data.evolution_chain.url);
                 const chain = extractEvolutionChain(evolutionResponse.data.chain);
                 setEvolutions(chain);
@@ -32,13 +30,11 @@ const PokemonCard = ({ name, url }) => {
         fetchDetails();
     }, [url, name]);
 
-    // Blocca lo scroll della pagina quando l'overlay è visibile
     useEffect(() => {
         document.body.style.overflow = showDetails ? "hidden" : "auto";
         return () => (document.body.style.overflow = "auto");
     }, [showDetails]);
 
-    // Estrai la catena evolutiva
     const extractEvolutionChain = (chain) => {
         const evolutions = [];
         let current = chain;
@@ -49,9 +45,14 @@ const PokemonCard = ({ name, url }) => {
         return evolutions;
     };
 
-    if (!details || !species) return <p style={{ textAlign: "center", fontSize: "1.2rem", color: "#ff6f61" }}>Caricamento dettagli...</p>;
+    if (!details || !species) {
+        return (
+            <p style={{ textAlign: "center", fontSize: "1.2rem", color: "#ff6f61" }}>
+                Caricamento dettagli...
+            </p>
+        );
+    }
 
-    // Traduci i tipi
     const traduciTipo = (tipo) => {
         const tipiInItaliano = {
             normal: "Normale",
@@ -76,11 +77,10 @@ const PokemonCard = ({ name, url }) => {
         return tipiInItaliano[tipo] || tipo;
     };
 
-    // Traduzione della descrizione
     const descrizione = species.flavor_text_entries.find((entry) => entry.language.name === "it")?.flavor_text || "Descrizione non disponibile.";
 
     return (
-        <div style={{ position: "relative", textAlign: "center" }}>
+        <div style={{ position: "relative", textAlign: "center", userSelect: "none" }}>
             {/* Card principale */}
             <div
                 style={{
@@ -91,16 +91,21 @@ const PokemonCard = ({ name, url }) => {
                     textAlign: "center",
                     cursor: "pointer",
                     boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
+                    userSelect: "none",
+                    outline: "none",
                 }}
                 onClick={() => setShowDetails(true)}
+                tabIndex={-1} // Previene il focus sulla card
             >
                 <img
                     src={details.sprites.front_default}
                     alt={name}
-                    style={{ width: "140px", height: "140px", marginBottom: "10px" }}
+                    style={{ width: "140px", height: "140px", marginBottom: "10px", pointerEvents: "none" }}
                 />
-                <h3>{name.toUpperCase()}</h3>
-                <p><strong>Tipo:</strong> {details.types.map(type => traduciTipo(type.type.name)).join(", ")}</p>
+                <h3 style={{ margin: 0 }}>{name.toUpperCase()}</h3>
+                <p style={{ margin: 0 }}>
+                    <strong>Tipo:</strong> {details.types.map(type => traduciTipo(type.type.name)).join(", ")}
+                </p>
             </div>
 
             {/* Overlay dei dettagli */}
@@ -148,7 +153,11 @@ const PokemonCard = ({ name, url }) => {
                             />
                         </button>
                         <h2>{details.name.toUpperCase()}</h2>
-                        <img src={details.sprites.other["official-artwork"].front_default} alt={details.name} style={{ width: "100%", maxWidth: "300px", marginBottom: "20px" }} />
+                        <img
+                            src={details.sprites.other["official-artwork"].front_default}
+                            alt={details.name}
+                            style={{ width: "100%", maxWidth: "300px", marginBottom: "20px" }}
+                        />
                         <p><strong>Descrizione:</strong> {descrizione}</p>
                         <p><strong>Esperienza Base:</strong> {details.base_experience}</p>
                         <p><strong>Altezza:</strong> {(details.height * 0.1).toFixed(2)} m</p>
