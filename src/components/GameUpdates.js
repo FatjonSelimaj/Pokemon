@@ -14,7 +14,7 @@ const GameUpdates = () => {
             try {
                 setLoading(true);
                 const response = await axios.get(
-                    'https://api.rawg.io/api/games?key=YOUR_API_KEY'
+                    'https://api.rawg.io/api/games?key=146eb233b6f141a3af57ddc969341fce'
                 );
                 setGames(response.data.results);
             } catch (error) {
