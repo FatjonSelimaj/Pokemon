@@ -47,9 +47,9 @@ const Home = () => {
                             fontSize: "1rem",
                             textAlign: "center",
                             transition: "all 0.3s ease",
-                            outline: "none", // Rimuove il bordo di focus
+                            outline: "none",
                         }}
-                        tabIndex={-1} // Disabilita il focus
+                        tabIndex={-1} 
                     >
                         {category.toUpperCase()}
                     </Link>
