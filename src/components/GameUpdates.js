@@ -13,7 +13,7 @@ const GameUpdates = () => {
         const fetchGames = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get('https://www.freetogame.com/api/games');
+                const response = await axios.get('/api/games');
                 // Assicurati che la risposta sia un array
                 if (Array.isArray(response.data)) {
                     setGames(response.data);
