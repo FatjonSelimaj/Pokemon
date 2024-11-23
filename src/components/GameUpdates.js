@@ -13,22 +13,17 @@ const GameUpdates = () => {
         const fetchGames = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get('/api/games');
-                // Assicurati che la risposta sia un array
-                if (Array.isArray(response.data)) {
-                    setGames(response.data);
-                } else {
-                    console.error("La risposta non è un array:", response.data);
-                    setGames([]);
-                }
+                const response = await axios.get(
+                    'https://api.rawg.io/api/games?key=YOUR_API_KEY'
+                );
+                setGames(response.data.results);
             } catch (error) {
-                console.error("Errore durante il fetch dei giochi:", error.message);
-                setGames([]); // Imposta come array vuoto in caso di errore
+                console.error('Errore durante il fetch dei giochi:', error.message);
+                setGames([]);
             } finally {
                 setLoading(false);
             }
         };
-
         fetchGames();
     }, []);
 
