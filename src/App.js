@@ -19,7 +19,7 @@ const App = () => {
                 {/* Barra di navigazione */}
                 <nav style={{
                     display: "flex",
-                    flexWrap: "wrap", // Adatta per schermi piccoli
+                    flexWrap: "wrap",
                     justifyContent: "center",
                     gap: "20px",
                     backgroundColor: "#ffcb05",
@@ -78,6 +78,7 @@ const App = () => {
                     <Route path="/categorie/:type" element={<PokemonCategory />} />
                     <Route path="/pokemontcg" element={<PokemonTCGPage />} />
                     <Route path="/giochi" element={<GameUpdates />} />
+                    <Route path="/card-categories" element={<PokemonTCGPage />} />
                 </Routes>
             </div>
         </Router>
